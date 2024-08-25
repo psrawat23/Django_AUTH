@@ -16,5 +16,9 @@ urlpatterns = [
     path('user-register/',include(router.urls)),
     path('send_otp/',SendOTP.as_view()),
     path('user-login/',LoginView.as_view()),
-    path('verify_otp/',VerifyOTP.as_view())
+    path('verify_otp/',VerifyOTP.as_view()),
+    path('protected/', ProtectedView.as_view(), name='protected'),
+    path('logout/', LogoutView.as_view(), name='logout'),
+
+
 ]  

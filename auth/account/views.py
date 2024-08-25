@@ -20,6 +20,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from account.serializers import VerifyAccountSerializer
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.permissions import IsAuthenticated
 
 # from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -226,20 +227,22 @@ class VerifyOTP(APIView):
 
 
 
+class ProtectedView(APIView):
+    permission_classes = [IsAuthenticated]
 
-# logout api view
-# class LogoutView(APIView):
-#     permission_classes = (permissions.IsAuthenticated,)
+    def get(self, request):
+        return Response({"message": "You are authenticated"}, status=status.HTTP_200_OK)
 
-#     def post(self, request, format=None):
-#         try:
-#             request.user.auth_token.delete()
-#             return Response({
-#                 'message': 'Logout successfully',
-#                 'status': status.HTTP_200_OK,
-#             })
-#         except Exception as e:
-#             return Response({
-#                 'message': str(e),
-#                 'status': status.HTTP_400_BAD_REQUEST,
-#             })
+class LogoutView(APIView): 
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        try:
+            print(request)
+            refresh_token = request.data["refresh"]
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+
+            return Response(status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            return Response(status=status.HTTP_400_BAD_REQUEST)

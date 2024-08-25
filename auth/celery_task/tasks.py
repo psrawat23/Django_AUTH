@@ -14,3 +14,9 @@ def send_mail(self,email,subject,body):
         print(str(e))
         return "SUCCESS"
 
+
+@shared_task
+def say_hi(*args,**kwarg):
+    print("Hi This is purushottam")
+    # return "SUCCESS"
+
